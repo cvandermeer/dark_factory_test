@@ -1,0 +1,16 @@
+{
+  "name": "dark_factory_agent",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Node wrapper that runs the Claude Agent SDK on behalf of a Rails job.",
+  "scripts": {
+    "agent": "node script/run_agent.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.119"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

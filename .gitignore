@@ -7,8 +7,8 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files.
-/.env*
+# Ignore local environment file (but not .env.example).
+/.env
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -36,3 +36,10 @@
 # Isolated worktrees for subagent/feature-branch development.
 /.worktrees
 
+# Node
+/node_modules
+/npm-debug.log
+
+# Worktrees created by DarkFactoryJob (lives as a sibling directory, not inside this repo,
+# but ignore the symlink/target if someone puts it here by mistake)
+/df_work
