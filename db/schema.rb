@@ -10,5 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_24_131127) do
+  create_table "feature_requests", force: :cascade do |t|
+    t.text "body", null: false
+    t.string "branch_name"
+    t.datetime "created_at", null: false
+    t.text "failure_reason"
+    t.datetime "pr_merged_at"
+    t.string "pr_url"
+    t.string "status", default: "todo", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_feature_requests_on_status"
+  end
 end

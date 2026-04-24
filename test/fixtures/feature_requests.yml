@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  body: MyText
+  status: MyString
+  branch_name: MyString
+  pr_url: MyString
+  pr_merged_at: 2026-04-24 15:11:27
+  failure_reason: MyText
+
+two:
+  title: MyString
+  body: MyText
+  status: MyString
+  branch_name: MyString
+  pr_url: MyString
+  pr_merged_at: 2026-04-24 15:11:27
+  failure_reason: MyText
