@@ -1,22 +1,12 @@
+<%= turbo_stream_from "feature_request_#{@feature_request.id}_events" %>
+<%= turbo_stream_from "feature_request_#{@feature_request.id}" %>
+
 <div class="fr-show">
   <nav><%= link_to "← Board", root_path %></nav>
 
-  <header>
-    <h1><%= @feature_request.title %></h1>
-    <div class="fr-show__status">Status: <strong><%= @feature_request.status %></strong></div>
-    <% if @feature_request.pr_url.present? %>
-      <a href="<%= @feature_request.pr_url %>" target="_blank" rel="noopener">Open PR ↗</a>
-      <% if @feature_request.pr_merged_at.present? %>
-        <span class="fr-merged">✓ merged <%= time_ago_in_words(@feature_request.pr_merged_at) %> ago</span>
-      <% end %>
-    <% end %>
-    <% if @feature_request.failure_reason.present? %>
-      <div class="fr-show__failure">
-        <strong>Failure:</strong>
-        <pre><%= @feature_request.failure_reason %></pre>
-      </div>
-    <% end %>
-  </header>
+  <div id="<%= dom_id(@feature_request, :header) %>">
+    <%= render "header", feature_request: @feature_request %>
+  </div>
 
   <section class="fr-show__body">
     <h3>Request</h3>

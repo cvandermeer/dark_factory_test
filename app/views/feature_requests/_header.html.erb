@@ -1,0 +1,16 @@
+<header>
+  <h1><%= feature_request.title %></h1>
+  <div class="fr-show__status">Status: <strong><%= feature_request.status %></strong></div>
+  <% if feature_request.pr_url.present? %>
+    <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">Open PR ↗</a>
+    <% if feature_request.pr_merged_at.present? %>
+      <span class="fr-merged">✓ merged <%= time_ago_in_words(feature_request.pr_merged_at) %> ago</span>
+    <% end %>
+  <% end %>
+  <% if feature_request.failure_reason.present? %>
+    <div class="fr-show__failure">
+      <strong>Failure:</strong>
+      <pre><%= feature_request.failure_reason %></pre>
+    </div>
+  <% end %>
+</header>

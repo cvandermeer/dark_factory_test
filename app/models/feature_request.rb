@@ -39,5 +39,12 @@ class FeatureRequest < ApplicationRecord
     else
       broadcast_replace_to "board", partial: "feature_requests/card", locals: { feature_request: self }
     end
+
+    broadcast_replace_to(
+      "feature_request_#{id}",
+      target: ActionView::RecordIdentifier.dom_id(self, :header),
+      partial: "feature_requests/header",
+      locals: { feature_request: self }
+    )
   end
 end
