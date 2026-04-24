@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  feature_request: one
+  kind: MyString
+  payload: 
+  sequence: 1
+
+two:
+  feature_request: two
+  kind: MyString
+  payload: 
+  sequence: 1
