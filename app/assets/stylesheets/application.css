@@ -111,3 +111,39 @@ body {
   font-size: 11px; color: #999;
 }
 .fr-card__delete:hover { color: #b00020; }
+
+.fr-show {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 24px;
+}
+.fr-show nav { margin-bottom: 12px; font-size: 13px; }
+.fr-show header h1 { margin: 0 0 8px; }
+.fr-show__failure { margin-top: 12px; color: #b00020; }
+.fr-show__failure pre { background: #fff5f5; padding: 8px; border-radius: 4px; overflow: auto; font-size: 12px; }
+.fr-show__body { margin: 24px 0; }
+.fr-show__events h3 { margin-bottom: 8px; }
+
+.ae-stream {
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 8px;
+  max-height: 600px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ae { font-size: 13px; padding: 6px 8px; background: white; border-radius: 4px; border: 1px solid #eee; }
+.ae__meta { font-size: 10px; color: #999; text-transform: uppercase; margin-bottom: 2px; }
+.ae__text { white-space: pre-wrap; }
+.ae--error { background: #fff5f5; border-color: #fecaca; }
+.ae__error { color: #b00020; }
+.ae__system { color: #666; font-style: italic; }
+.ae__tool pre { background: #f5f5f5; padding: 6px; border-radius: 3px; font-size: 11px; overflow-x: auto; }
+.ae__tool summary { cursor: pointer; user-select: none; }

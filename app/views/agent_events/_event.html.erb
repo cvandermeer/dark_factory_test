@@ -1,0 +1,28 @@
+<% payload = event.payload || {} %>
+
+<%= tag.div id: dom_id(event), class: "ae ae--#{event.kind}" do %>
+  <div class="ae__meta">#<%= event.sequence %> · <%= event.kind %></div>
+
+  <% case event.kind %>
+  <% when "text" %>
+    <div class="ae__text"><%= simple_format(payload["content"].to_s) %></div>
+
+  <% when "tool_use" %>
+    <details class="ae__tool">
+      <summary>🔧 <%= payload["tool"] %>(<%= (payload["args"] || {}).keys.join(", ") %>)</summary>
+      <pre><%= JSON.pretty_generate(payload["args"] || {}) %></pre>
+    </details>
+
+  <% when "tool_result" %>
+    <details class="ae__tool">
+      <summary>← result (<%= payload["tool"] %>)</summary>
+      <pre><%= truncate(payload["output"].to_s, length: 4000) %></pre>
+    </details>
+
+  <% when "error" %>
+    <div class="ae__error"><%= payload["message"] %></div>
+
+  <% when "system" %>
+    <div class="ae__system"><%= payload["message"] %></div>
+  <% end %>
+<% end %>
