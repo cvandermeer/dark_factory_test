@@ -1,0 +1,44 @@
+<% content_for :title, "FAQ – Dark Factory" %>
+
+<div class="faq-page">
+  <nav class="faq-nav">
+    <%= link_to "← Back to board", root_path %>
+  </nav>
+
+  <h1 class="faq-title">Frequently Asked Questions</h1>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <h2 class="faq-question">What is Dark Factory?</h2>
+      <p class="faq-answer">
+        Dark Factory is an AI-powered feature request management system. You submit a feature
+        request describing what you want built, and an AI agent autonomously implements it —
+        writing the code, opening a pull request, and tracking the work through a Kanban board
+        from <em>Todo</em> all the way to <em>Done</em>.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h2 class="faq-question">How do I submit a feature request?</h2>
+      <p class="faq-answer">
+        From the <a href="<%= root_path %>">home page</a>, fill in the <strong>Title</strong>
+        and <strong>Body</strong> fields and hit <em>Submit</em>. Be as specific as possible —
+        the clearer your description, the better the AI agent can understand and implement your
+        request. Once submitted, your card will appear in the <em>Todo</em> column and the agent
+        will pick it up automatically.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h2 class="faq-question">How does the AI agent work?</h2>
+      <p class="faq-answer">
+        When a feature request is picked up, an AI agent reads your description, plans the
+        implementation, and writes the necessary code changes. You can watch its progress in
+        real time on the feature request detail page — every tool call, file edit, and decision
+        is streamed as an event log. When the agent finishes, it opens a pull request and moves
+        the card to <em>To Review</em>. If something goes wrong, the card moves to
+        <em>Failed</em> with a reason so you can refine and resubmit.
+      </p>
+    </div>
+  </div>
+</div>
