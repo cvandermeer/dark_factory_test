@@ -1,0 +1,32 @@
+<%= tag.div id: dom_id(feature_request), class: "fr-card fr-card--#{feature_request.status}" do %>
+  <%= link_to feature_request, class: "fr-card__link" do %>
+    <div class="fr-card__title"><%= feature_request.title %></div>
+    <div class="fr-card__body"><%= truncate(feature_request.body, length: 120) %></div>
+
+    <% case feature_request.status %>
+    <% when "doing" %>
+      <div class="fr-card__status">
+        <span class="fr-spinner"></span> running…
+      </div>
+    <% when "to_review" %>
+      <div class="fr-card__status">
+        <% if feature_request.pr_url.present? %>
+          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
+        <% end %>
+        <% if feature_request.pr_merged_at.present? %>
+          <span class="fr-merged">✓ merged</span>
+        <% end %>
+      </div>
+    <% when "failed" %>
+      <div class="fr-card__status fr-card__status--failed">
+        <%= truncate(feature_request.failure_reason.to_s, length: 80) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if %w[to_review failed].include?(feature_request.status) %>
+    <%= button_to "Delete", feature_request, method: :delete,
+                  data: { turbo_confirm: "Remove this card? (Does not touch GitHub.)" },
+                  class: "fr-card__delete" %>
+  <% end %>
+<% end %>

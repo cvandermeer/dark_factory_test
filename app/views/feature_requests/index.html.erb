@@ -1,0 +1,17 @@
+<section class="fr-submit">
+  <h2>Submit a feature request</h2>
+  <%= render "form", feature_request: @feature_request %>
+</section>
+
+<section class="fr-board">
+  <% %w[todo doing to_review failed].each do |col| %>
+    <div class="fr-column">
+      <h3 class="fr-column__title"><%= col.humanize %></h3>
+      <div class="fr-column__cards">
+        <% @feature_requests.select { |fr| fr.status == col }.each do |fr| %>
+          <%= render "card", feature_request: fr %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</section>

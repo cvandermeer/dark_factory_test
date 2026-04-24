@@ -1,0 +1,21 @@
+<%= form_with(model: feature_request, class: "fr-form") do |f| %>
+  <% if feature_request.errors.any? %>
+    <div class="fr-errors">
+      <% feature_request.errors.full_messages.each do |msg| %>
+        <div><%= msg %></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title, placeholder: "One-line summary of the feature" %>
+  </div>
+  <div>
+    <%= f.label :body %>
+    <%= f.text_area :body, rows: 4, placeholder: "Details — what should the AI build?" %>
+  </div>
+  <div>
+    <%= f.submit "Submit feature request" %>
+  </div>
+<% end %>

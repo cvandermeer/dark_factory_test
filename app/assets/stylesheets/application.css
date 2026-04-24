@@ -8,3 +8,106 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #fafafa;
+  color: #222;
+}
+
+.fr-submit {
+  max-width: 640px;
+  margin: 0 auto 32px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.fr-submit h2 { margin-top: 0; }
+
+.fr-form div { margin-bottom: 12px; }
+.fr-form label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; }
+.fr-form input[type="text"],
+.fr-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.fr-form input[type="submit"] {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.fr-errors { color: #b00020; margin-bottom: 12px; }
+
+.fr-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.fr-column {
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 400px;
+}
+
+.fr-column__title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+}
+
+.fr-column__cards { display: flex; flex-direction: column; gap: 8px; }
+
+.fr-card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  position: relative;
+}
+.fr-card--doing { border-left: 3px solid #3b82f6; }
+.fr-card--to_review { border-left: 3px solid #10b981; }
+.fr-card--failed { border-left: 3px solid #ef4444; background: #fff5f5; }
+
+.fr-card__link { display: block; text-decoration: none; color: inherit; }
+.fr-card__title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.fr-card__body { font-size: 13px; color: #555; margin-bottom: 6px; }
+.fr-card__status { font-size: 12px; color: #666; }
+.fr-card__status--failed { color: #b00020; }
+.fr-merged { color: #10b981; margin-left: 6px; }
+
+.fr-spinner {
+  display: inline-block; width: 10px; height: 10px;
+  border: 2px solid #3b82f6; border-top-color: transparent;
+  border-radius: 50%;
+  animation: fr-spin 0.8s linear infinite;
+  vertical-align: middle; margin-right: 4px;
+}
+@keyframes fr-spin { to { transform: rotate(360deg); } }
+
+.fr-card__delete {
+  position: absolute; top: 6px; right: 6px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 11px; color: #999;
+}
+.fr-card__delete:hover { color: #b00020; }
