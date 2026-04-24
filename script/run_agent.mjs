@@ -45,7 +45,12 @@ try {
     options: {
       systemPrompt,
       permissionMode: "bypassPermissions",
+      allowDangerouslySkipPermissions: true,
       cwd: worktree,
+      // Don't inherit the user's ~/.claude/ plugins (superpowers, hooks, etc.) —
+      // a headless factory agent has no one to answer brainstorming questions.
+      // Keep the session hermetic.
+      settingSources: [],
     },
   });
 
