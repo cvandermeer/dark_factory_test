@@ -37,8 +37,10 @@ class AgentRunner
     end
 
     if exit_status != 0
+      last_error = @fr.agent_events.where(kind: "error").order(:sequence).last&.payload&.dig("message")
       tail = stderr_buf.lines.last(40).join
-      raise AgentFailed, "agent_exited: #{exit_status}\n#{tail}"
+      detail = last_error.presence || tail.presence || "(no output)"
+      raise AgentFailed, "agent_exited: #{exit_status} — #{detail}"
     end
   end
 
