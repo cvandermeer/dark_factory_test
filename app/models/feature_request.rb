@@ -19,4 +19,12 @@ class FeatureRequest < ApplicationRecord
   def branch
     branch_name || "feature-request/#{id}-#{slug}"
   end
+
+  after_create_commit :enqueue_dark_factory_job
+
+  private
+
+  def enqueue_dark_factory_job
+    DarkFactoryJob.perform_later(id)
+  end
 end
