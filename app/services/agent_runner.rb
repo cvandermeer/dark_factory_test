@@ -4,24 +4,31 @@ class AgentRunner
 
   DEFAULT_TIMEOUT = 15 * 60 # seconds
 
-  def initialize(feature_request:, worktree_path:, timeout: DEFAULT_TIMEOUT)
+  # mode: :implement (default), :reviewer, or :address
+  # stdin_payload: the hash that gets JSON-encoded and piped to the Node subprocess.
+  #   - implement: { title:, body: }
+  #   - reviewer:  { title:, body:, pr_url: }
+  #   - address:   { title:, body:, diff:, feedback: }
+  def initialize(feature_request:, worktree_path:, mode: :implement, stdin_payload: nil, timeout: DEFAULT_TIMEOUT)
     @fr = feature_request
     @worktree = worktree_path
+    @mode = mode
+    @stdin_payload = stdin_payload || { title: @fr.title, body: @fr.body }
     @timeout = timeout
     @sequence = @fr.agent_events.maximum(:sequence).to_i + 1
   end
 
   def run!
-    stdin_payload = JSON.dump(title: @fr.title, body: @fr.body)
-    cmd = ["node", Rails.root.join("script/run_agent.mjs").to_s, "--worktree", @worktree]
+    cmd = ["node", Rails.root.join("script/run_agent.mjs").to_s,
+           "--worktree", @worktree, "--mode", @mode.to_s]
     env = { "ANTHROPIC_API_KEY" => ENV["ANTHROPIC_API_KEY"] }
 
-    Rails.logger.info("[AgentRunner] spawning: #{cmd.join(' ')}")
+    Rails.logger.info("[AgentRunner mode=#{@mode}] spawning: #{cmd.join(' ')}")
     stderr_buf = +""
     exit_status = nil
 
     Open3.popen3(env, *cmd, chdir: Rails.root.to_s) do |stdin, stdout, stderr, wait_thr|
-      stdin.write(stdin_payload)
+      stdin.write(JSON.dump(@stdin_payload))
       stdin.close
 
       err_reader = Thread.new { stderr.each_line { |l| stderr_buf << l } }
@@ -56,8 +63,6 @@ class AgentRunner
     Rails.logger.warn("[AgentRunner] non-JSON stdout: #{line.inspect}")
   end
 
-  # Best-effort mapping from SDK message shapes to our event kinds.
-  # Whatever we don't recognize, we store as "system" with the raw payload.
   def classify(msg)
     case msg["type"]
     when "assistant", "text"
@@ -69,7 +74,7 @@ class AgentRunner
     when "error"
       ["error", { "message" => msg.dig("error", "message") || msg["message"].to_s }]
     when "done"
-      ["system", { "message" => "agent finished" }]
+      ["system", { "message" => "agent finished (#{@mode})" }]
     else
       ["system", { "message" => msg.inspect.truncate(1000) }]
     end
