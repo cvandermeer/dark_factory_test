@@ -148,6 +148,29 @@ body {
 .ae__tool pre { background: #f5f5f5; padding: 6px; border-radius: 3px; font-size: 11px; overflow-x: auto; }
 .ae__tool summary { cursor: pointer; user-select: none; }
 
+/* Flash messages */
+.flash {
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flash--notice {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #15803d;
+}
+
+.flash--alert {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: #b00020;
+}
+
 /* FAQ page */
 .faq-page {
   max-width: 720px;
@@ -198,4 +221,113 @@ body {
   font-size: 14px;
   color: #444;
   line-height: 1.6;
+}
+
+/* Refund button on FAQ page */
+.faq-refund {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.faq-refund__text {
+  margin: 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.faq-refund__btn {
+  display: inline-block;
+  background: #111;
+  color: white;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.faq-refund__btn:hover {
+  background: #333;
+}
+
+/* Refund request form page */
+.refund-card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.refund-intro {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.refund-alert {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  color: #b00020;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.refund-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.refund-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.refund-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+}
+
+.refund-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.refund-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.refund-submit {
+  align-self: flex-start;
+  background: #111;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refund-submit:hover {
+  background: #333;
 }

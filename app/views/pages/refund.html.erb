@@ -1,0 +1,37 @@
+<% content_for :title, "Request a Refund – Dark Factory" %>
+
+<div class="faq-page">
+  <nav class="faq-nav">
+    <%= link_to "← Back to FAQ", faq_path %>
+  </nav>
+
+  <h1 class="faq-title">Request a Refund</h1>
+
+  <div class="refund-card">
+    <p class="refund-intro">
+      Not satisfied? Fill out the form below and our team will review your request
+      within 2 business days.
+    </p>
+
+    <% if flash.now[:alert] %>
+      <div class="refund-alert"><%= flash.now[:alert] %></div>
+    <% end %>
+
+    <%= form_with url: submit_refund_path, method: :post, class: "refund-form" do |f| %>
+      <div class="refund-field">
+        <%= f.label :email, "Your Email", class: "refund-label" %>
+        <%= f.email_field :email, value: @email, placeholder: "you@example.com",
+                          class: "refund-input", required: true %>
+      </div>
+
+      <div class="refund-field">
+        <%= f.label :reason, "Reason for Refund", class: "refund-label" %>
+        <%= f.text_area :reason, value: @reason,
+                        placeholder: "Please describe why you'd like a refund…",
+                        rows: 5, class: "refund-input", required: true %>
+      </div>
+
+      <%= f.submit "Submit Refund Request", class: "refund-submit" %>
+    <% end %>
+  </div>
+</div>
