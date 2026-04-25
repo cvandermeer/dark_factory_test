@@ -15,6 +15,7 @@ class DarkFactoryJob < ApplicationJob
       ensure_agent_made_commits!(worktree.path)
       pr_url = PrCreator.new(feature_request: fr, worktree_path: worktree.path).create!
       fr.update!(status: "to_review", pr_url: pr_url)
+      ReviewAgentJob.perform_later(fr.id)
     rescue AgentRunner::Timeout
       fr.update!(status: "failed", failure_reason: "budget_exceeded: 15 min")
     rescue AgentRunner::AgentFailed => e
