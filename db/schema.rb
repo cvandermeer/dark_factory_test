@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_24_131207) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_25_085346) do
   create_table "agent_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "feature_request_id", null: false
@@ -27,6 +27,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_24_131207) do
     t.string "branch_name"
     t.datetime "created_at", null: false
     t.text "failure_reason"
+    t.boolean "feedback_addressed", default: false, null: false
+    t.datetime "last_review_seen_at"
     t.datetime "pr_merged_at"
     t.string "pr_url"
     t.string "status", default: "todo", null: false

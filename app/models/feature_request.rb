@@ -1,5 +1,5 @@
 class FeatureRequest < ApplicationRecord
-  STATUSES = %w[todo doing to_review failed].freeze
+  STATUSES = %w[todo doing to_review review_feedback failed].freeze
 
   has_many :agent_events, -> { order(:sequence) }, dependent: :destroy
 
@@ -11,10 +11,11 @@ class FeatureRequest < ApplicationRecord
   after_update_commit  :broadcast_card_refresh
   after_destroy_commit -> { broadcast_remove_to "board" }
 
-  scope :todo,      -> { where(status: "todo") }
-  scope :doing,     -> { where(status: "doing") }
-  scope :to_review, -> { where(status: "to_review") }
-  scope :failed,    -> { where(status: "failed") }
+  scope :todo,             -> { where(status: "todo") }
+  scope :doing,            -> { where(status: "doing") }
+  scope :to_review,        -> { where(status: "to_review") }
+  scope :review_feedback,  -> { where(status: "review_feedback") }
+  scope :failed,           -> { where(status: "failed") }
 
   def slug
     title.parameterize.presence || "untitled"
