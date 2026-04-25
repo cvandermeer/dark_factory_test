@@ -9,6 +9,7 @@ class FeatureRequest < ApplicationRecord
 
   after_create_commit  -> { broadcast_prepend_to "board", target: "fr-column-#{status}", partial: "feature_requests/card", locals: { feature_request: self } }
   after_update_commit  :broadcast_card_refresh
+  after_update_commit  :enqueue_address_feedback_job, if: -> { saved_change_to_status? && status == "review_feedback" }
   after_destroy_commit -> { broadcast_remove_to "board" }
 
   scope :todo,             -> { where(status: "todo") }
@@ -31,6 +32,10 @@ class FeatureRequest < ApplicationRecord
 
   def enqueue_dark_factory_job
     DarkFactoryJob.perform_later(id)
+  end
+
+  def enqueue_address_feedback_job
+    AddressFeedbackJob.perform_later(id)
   end
 
   def broadcast_card_refresh
