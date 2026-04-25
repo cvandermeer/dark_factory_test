@@ -54,9 +54,9 @@ body {
 
 .fr-board {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -87,7 +87,15 @@ body {
 }
 .fr-card--doing { border-left: 3px solid #3b82f6; }
 .fr-card--to_review { border-left: 3px solid #10b981; }
+.fr-card--review_feedback { border-left: 3px solid #a855f7; }
 .fr-card--failed { border-left: 3px solid #ef4444; background: #fff5f5; }
+
+.fr-feedback-addressed {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 11px;
+  color: #a855f7;
+}
 
 .fr-card__link { display: block; text-decoration: none; color: inherit; }
 .fr-card__title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }

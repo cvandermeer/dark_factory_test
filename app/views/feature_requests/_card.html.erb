@@ -16,6 +16,16 @@
         <% if feature_request.pr_merged_at.present? %>
           <span class="fr-merged">✓ merged</span>
         <% end %>
+        <% if feature_request.feedback_addressed %>
+          <span class="fr-feedback-addressed">↻ feedback addressed</span>
+        <% end %>
+      </div>
+    <% when "review_feedback" %>
+      <div class="fr-card__status">
+        <% if feature_request.pr_url.present? %>
+          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
+        <% end %>
+        <span>review feedback received</span>
       </div>
     <% when "failed" %>
       <div class="fr-card__status fr-card__status--failed">
