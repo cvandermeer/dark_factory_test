@@ -6,7 +6,7 @@
 </section>
 
 <section class="fr-board">
-  <% %w[todo doing to_review review_feedback failed].each do |col| %>
+  <% %w[todo doing to_review reviewing review_feedback failed].each do |col| %>
     <div class="fr-column">
       <h3 class="fr-column__title"><%= col.humanize %></h3>
       <div id="fr-column-<%= col %>" class="fr-column__cards">

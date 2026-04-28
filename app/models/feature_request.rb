@@ -1,5 +1,5 @@
 class FeatureRequest < ApplicationRecord
-  STATUSES = %w[todo doing to_review review_feedback failed].freeze
+  STATUSES = %w[todo doing to_review reviewing review_feedback failed].freeze
 
   has_many :agent_events, -> { order(:sequence) }, dependent: :destroy
 
@@ -15,6 +15,7 @@ class FeatureRequest < ApplicationRecord
   scope :todo,             -> { where(status: "todo") }
   scope :doing,            -> { where(status: "doing") }
   scope :to_review,        -> { where(status: "to_review") }
+  scope :reviewing,        -> { where(status: "reviewing") }
   scope :review_feedback,  -> { where(status: "review_feedback") }
   scope :failed,           -> { where(status: "failed") }
 

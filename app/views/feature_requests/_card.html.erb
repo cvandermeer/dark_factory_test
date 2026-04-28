@@ -8,6 +8,13 @@
       <div class="fr-card__status">
         <span class="fr-spinner"></span> running…
       </div>
+    <% when "reviewing" %>
+      <div class="fr-card__status">
+        <span class="fr-spinner fr-spinner--reviewing"></span> reviewing…
+        <% if feature_request.pr_url.present? %>
+          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
+        <% end %>
+      </div>
     <% when "to_review" %>
       <div class="fr-card__status">
         <% if feature_request.pr_url.present? %>

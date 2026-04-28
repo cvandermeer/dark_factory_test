@@ -7,6 +7,8 @@ class ReviewAgentJob < ApplicationJob
     fr = FeatureRequest.find(feature_request_id)
     return unless fr.pr_url.present?
 
+    fr.update!(status: "reviewing")
+
     worktree = WorktreeManager.new(
       repo_root: Rails.root.to_s,
       branch: fr.branch_name,
@@ -23,6 +25,7 @@ class ReviewAgentJob < ApplicationJob
       ).run!
 
       ensure_review_was_posted!(fr)
+      fr.update!(status: "to_review")
     rescue AgentRunner::Timeout
       fr.update!(status: "failed", failure_reason: "reviewer_timeout: 15 min")
     rescue AgentRunner::AgentFailed => e
