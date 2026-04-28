@@ -342,3 +342,246 @@ body {
 .refund-submit:hover {
   background: #333;
 }
+
+/* ── Info / How It Works page ─────────────────────────────────────────────── */
+.info-page {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.info-nav {
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.info-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+.info-nav a:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+.info-title {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+.info-subtitle {
+  margin: 0 0 36px;
+  font-size: 15px;
+  color: #555;
+  line-height: 1.65;
+}
+
+.info-section {
+  margin-bottom: 40px;
+}
+
+.info-section__heading {
+  margin: 0 0 14px;
+  font-size: 20px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 6px;
+}
+
+.info-section__lead {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.info-section p {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+
+/* Numbered steps */
+.info-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #333;
+}
+
+.info-step__num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: #111;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Callout box */
+.info-callout {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-left: 4px solid #10b981;
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: #166534;
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+/* Agent cards */
+.info-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-agent {
+  display: flex;
+  gap: 16px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.info-agent--implement { border-left: 4px solid #3b82f6; }
+.info-agent--review    { border-left: 4px solid #10b981; }
+.info-agent--address   { border-left: 4px solid #a855f7; }
+
+.info-agent__icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.info-agent__body {
+  flex: 1;
+}
+
+.info-agent__name {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #111;
+}
+
+.info-agent__desc {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.info-agent__facts {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* Kanban column explainer */
+.info-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.info-col {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.info-col strong {
+  flex-shrink: 0;
+  min-width: 130px;
+  color: #111;
+}
+
+.info-col span { color: #555; }
+
+.info-col--todo          { border-left: 4px solid #d1d5db; }
+.info-col--doing         { border-left: 4px solid #3b82f6; }
+.info-col--to_review     { border-left: 4px solid #10b981; }
+.info-col--review_feedback { border-left: 4px solid #a855f7; }
+.info-col--failed        { border-left: 4px solid #ef4444; }
+
+/* Tips list */
+.info-tips {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.65;
+}
+
+/* Footer links */
+.info-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  gap: 24px;
+}
+
+.info-footer__link {
+  font-size: 14px;
+  color: #555;
+  text-decoration: none;
+}
+
+.info-footer__link:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+/* Board page nav links */
+.board-nav {
+  max-width: 1800px;
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  font-size: 13px;
+}
+
+.board-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+.board-nav a:hover {
+  color: #111;
+  text-decoration: underline;
+}
