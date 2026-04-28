@@ -1,5 +1,10 @@
 <%= turbo_stream_from "board" %>
 
+<nav class="board-nav">
+  <%= link_to "How it works", info_path %>
+  <%= link_to "FAQ", faq_path %>
+</nav>
+
 <section class="fr-submit">
   <h2>Submit a feature request</h2>
   <%= render "form", feature_request: @feature_request %>

@@ -1,0 +1,200 @@
+<% content_for :title, "How It Works – Dark Factory" %>
+
+<div class="info-page">
+  <nav class="info-nav">
+    <%= link_to "← Back to board", root_path %>
+  </nav>
+
+  <h1 class="info-title">How Dark Factory Works</h1>
+  <p class="info-subtitle">
+    Dark Factory is a self-building Rails application — you describe a feature,
+    and AI agents write the code, open a pull request, and review their own work,
+    all without you touching a keyboard.
+  </p>
+
+  <!-- ── SECTION 1: The Big Picture ── -->
+  <section class="info-section">
+    <h2 class="info-section__heading">The Big Picture</h2>
+    <p class="info-section__lead">
+      Think of Dark Factory as a software team that never sleeps. You are the product manager:
+      you write what you want. The agents are the engineers and reviewers: they figure out how
+      to build it, make the changes, and check each other's work.
+    </p>
+
+    <div class="info-steps">
+      <div class="info-step">
+        <span class="info-step__num">1</span>
+        <div>
+          <strong>You submit a feature request</strong> — a short title and a plain-English
+          description of what you want built.
+        </div>
+      </div>
+      <div class="info-step">
+        <span class="info-step__num">2</span>
+        <div>
+          <strong>An AI agent reads your request</strong> and writes the code, editing files
+          directly inside the project. You can watch every move in real time.
+        </div>
+      </div>
+      <div class="info-step">
+        <span class="info-step__num">3</span>
+        <div>
+          <strong>The agent opens a pull request</strong> on GitHub with all the changes, then
+          a second agent reviews the code against your original description.
+        </div>
+      </div>
+      <div class="info-step">
+        <span class="info-step__num">4</span>
+        <div>
+          <strong>If changes are needed</strong>, a third agent reads the review feedback and
+          updates the code automatically. Once everything looks good, you merge.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: What "Dark Factory" Means ── -->
+  <section class="info-section">
+    <h2 class="info-section__heading">What Does "Dark Factory" Mean?</h2>
+    <p>
+      In manufacturing, a <em>dark factory</em> is a fully automated plant that runs entirely
+      in the dark — no human workers, no lights needed. Machines handle everything from raw
+      material to finished product.
+    </p>
+    <p>
+      This app borrows the same idea for software: once you submit a request the lights go out
+      and the agents take over. They read the codebase, write the code, commit it, push it,
+      and open a pull request — all without anyone in the loop. The only human step is
+      reviewing and merging the finished PR.
+    </p>
+    <div class="info-callout">
+      <strong>Fun detail:</strong> Dark Factory can improve itself. Submit a feature request
+      asking for a new capability, and the agents will implement it in their own codebase and
+      open a PR against the same repo you are looking at right now.
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: Meet the Agents ── -->
+  <section class="info-section">
+    <h2 class="info-section__heading">Meet the Three Agents</h2>
+    <p>
+      Each agent is a Claude AI model given a specific job and a set of tools
+      (read files, write files, run shell commands, call the GitHub API). They work in
+      isolated copies of the repository so they can never break each other's work.
+    </p>
+
+    <div class="info-agents">
+      <div class="info-agent info-agent--implement">
+        <div class="info-agent__icon">🏗️</div>
+        <div class="info-agent__body">
+          <h3 class="info-agent__name">Implementation Agent</h3>
+          <p class="info-agent__desc">
+            The builder. It reads your feature request, explores the codebase to understand
+            how it works, writes or edits the files it needs to change, and commits the result.
+            When it is done it pushes the branch and opens a pull request on GitHub.
+          </p>
+          <ul class="info-agent__facts">
+            <li>Triggered automatically when you submit a request</li>
+            <li>Works in an isolated git worktree (a private sandbox)</li>
+            <li>Every tool call — file read, file write, shell command — is streamed live to your browser</li>
+            <li>If it cannot make at least one commit, the request is marked <em>Failed</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-agent info-agent--review">
+        <div class="info-agent__icon">🔍</div>
+        <div class="info-agent__body">
+          <h3 class="info-agent__name">Review Agent</h3>
+          <p class="info-agent__desc">
+            The quality checker. It reads the pull request diff, compares it against your
+            original description, and posts a formal GitHub review: either an approval or a
+            list of requested changes with specific comments.
+          </p>
+          <ul class="info-agent__facts">
+            <li>Fires automatically after the Implementation Agent opens a PR</li>
+            <li>Posts a real GitHub PR review (Approved or Changes Requested)</li>
+            <li>If it requests changes, the card moves to the <em>Review Feedback</em> column</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-agent info-agent--address">
+        <div class="info-agent__icon">🛠️</div>
+        <div class="info-agent__body">
+          <h3 class="info-agent__name">Feedback Agent</h3>
+          <p class="info-agent__desc">
+            The fixer. When the Review Agent asks for changes, this agent reads every comment,
+            makes the necessary edits, commits them, and pushes to the same PR branch so the
+            review can be re-evaluated.
+          </p>
+          <ul class="info-agent__facts">
+            <li>Triggered automatically when a <em>Changes Requested</em> review is detected</li>
+            <li>Edits the existing PR branch in place — no new branch created</li>
+            <li>Runs at most once per feature request to prevent infinite loops</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 4: The Kanban Board ── -->
+  <section class="info-section">
+    <h2 class="info-section__heading">Reading the Kanban Board</h2>
+    <p>
+      The home page shows every feature request as a card on a Kanban board. Each column
+      represents a stage in the pipeline:
+    </p>
+
+    <div class="info-columns">
+      <div class="info-col info-col--todo">
+        <strong>Todo</strong>
+        <span>Waiting to be picked up by the Implementation Agent.</span>
+      </div>
+      <div class="info-col info-col--doing">
+        <strong>Doing</strong>
+        <span>An agent is actively working right now. Watch the live event stream on the detail page.</span>
+      </div>
+      <div class="info-col info-col--to_review">
+        <strong>To Review</strong>
+        <span>A pull request is open on GitHub. The Review Agent has run (or is running). Waiting for a human merge.</span>
+      </div>
+      <div class="info-col info-col--review_feedback">
+        <strong>Review Feedback</strong>
+        <span>The Review Agent asked for changes. The Feedback Agent will address them automatically.</span>
+      </div>
+      <div class="info-col info-col--failed">
+        <strong>Failed</strong>
+        <span>Something went wrong. Open the card to read the error, then delete it and resubmit with a clearer description.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 5: Tips ── -->
+  <section class="info-section">
+    <h2 class="info-section__heading">Tips for Good Feature Requests</h2>
+    <ul class="info-tips">
+      <li>
+        <strong>Be specific.</strong> Instead of "improve the UI", try
+        "add a character count below the body textarea that turns red when over 500 characters."
+      </li>
+      <li>
+        <strong>One thing at a time.</strong> Smaller, focused requests succeed more often than
+        large multi-part ones.
+      </li>
+      <li>
+        <strong>Describe the goal, not the implementation.</strong> Tell the agent what the
+        feature should do for the user, not which files to edit — it will figure that out.
+      </li>
+      <li>
+        <strong>Check the event stream</strong> on the detail page to see exactly what the agent
+        did. If it misunderstood something, the stream usually shows where it went off track.
+      </li>
+    </ul>
+  </section>
+
+  <div class="info-footer">
+    <%= link_to "← Back to board", root_path, class: "info-footer__link" %>
+    <%= link_to "FAQ", faq_path, class: "info-footer__link" %>
+  </div>
+</div>
