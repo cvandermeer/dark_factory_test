@@ -1,0 +1,67 @@
+<% content_for :title, "Stats – Dark Factory" %>
+
+<div class="stats-page">
+  <nav class="stats-nav">
+    <%= link_to "← Back to board", root_path %>
+  </nav>
+
+  <h1 class="stats-title">Stats</h1>
+  <p class="stats-subtitle">A live snapshot of every feature request that has passed through Dark Factory.</p>
+
+  <!-- ── Feature request counts ── -->
+  <section class="stats-section">
+    <h2 class="stats-section__heading">Feature Requests</h2>
+
+    <div class="stats-summary">
+      <div class="stats-total">
+        <span class="stats-total__number"><%= @total %></span>
+        <span class="stats-total__label">Total features made</span>
+      </div>
+      <div class="stats-total stats-total--merged">
+        <span class="stats-total__number"><%= @merged %></span>
+        <span class="stats-total__label">Merged to main</span>
+      </div>
+    </div>
+
+    <div class="stats-status-grid">
+      <% status_meta = {
+           "todo"            => { label: "Todo",            color: "#d1d5db" },
+           "doing"           => { label: "Doing",           color: "#3b82f6" },
+           "to_review"       => { label: "To Review",       color: "#10b981" },
+           "reviewing"       => { label: "Reviewing",       color: "#f59e0b" },
+           "review_feedback" => { label: "Review Feedback", color: "#a855f7" },
+           "failed"          => { label: "Failed",          color: "#ef4444" }
+         } %>
+      <% @by_status.each do |status, count| %>
+        <% meta = status_meta[status] %>
+        <div class="stats-status-card" style="border-top-color: <%= meta[:color] %>">
+          <span class="stats-status-card__count"><%= count %></span>
+          <span class="stats-status-card__label"><%= meta[:label] %></span>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- ── Bots ── -->
+  <section class="stats-section">
+    <h2 class="stats-section__heading">The Bots</h2>
+    <p class="stats-section__intro">Three AI agents collaborate to turn every feature request into merged code.</p>
+
+    <div class="stats-bots">
+      <% @bots.each do |bot| %>
+        <div class="stats-bot <%= bot[:color_class] %>">
+          <div class="stats-bot__icon"><%= bot[:icon] %></div>
+          <div class="stats-bot__body">
+            <h3 class="stats-bot__name"><%= bot[:name] %></h3>
+            <p class="stats-bot__desc"><%= bot[:description] %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <footer class="stats-footer">
+    <%= link_to "How it works", info_path, class: "stats-footer__link" %>
+    <%= link_to "FAQ", faq_path, class: "stats-footer__link" %>
+  </footer>
+</div>

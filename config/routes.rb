@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "faq" => "pages#faq", as: :faq
   get  "refund" => "pages#refund",        as: :refund
   post "refund" => "pages#submit_refund", as: :submit_refund
+  get "stats" => "pages#stats", as: :stats
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
