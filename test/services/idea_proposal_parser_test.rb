@@ -28,6 +28,28 @@ class IdeaProposalParserTest < ActiveSupport::TestCase
     assert_equal "Show finished idea jobs.", proposal.body
   end
 
+  test "parses base64 encoded proposal JSON" do
+    proposal = IdeaProposalParser.parse({
+      title_base64: Base64.strict_encode64("Add a Power Attack move"),
+      body_base64: Base64.strict_encode64("Add a move named \"Power Attack\" to /game battles."),
+      rationale_base64: Base64.strict_encode64("Quotes stay inside base64.")
+    }.to_json)
+
+    assert_equal "Add a Power Attack move", proposal.title
+    assert_equal "Add a move named \"Power Attack\" to /game battles.", proposal.body
+    assert_equal "Quotes stay inside base64.", proposal.rationale
+  end
+
+  test "recovers proposal fields when body contains unescaped quotes" do
+    proposal = IdeaProposalParser.parse(
+      "{\"title\":\"Add a warrior move\",\"body\":\"Add a move named \"Power Attack\" to the /game battle screen.\",\"rationale\":\"Expands combat.\"}"
+    )
+
+    assert_equal "Add a warrior move", proposal.title
+    assert_equal "Add a move named \"Power Attack\" to the /game battle screen.", proposal.body
+    assert_equal "Expands combat.", proposal.rationale
+  end
+
   test "idea runner prefers final result over partial assistant text" do
     stdout = [
       { raw: { type: "assistant", message: { content: [{ type: "text", text: "{\"title\":\"Show" }] } } }.to_json,

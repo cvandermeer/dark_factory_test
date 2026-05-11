@@ -48,6 +48,11 @@
                   class: "fr-card__stop" %>
   <% end %>
 
+  <% if feature_request.status == "failed" %>
+    <%= button_to "Retry", retry_feature_request_path(feature_request), method: :post,
+                  class: "fr-card__retry" %>
+  <% end %>
+
   <% if %w[done stopped failed].include?(feature_request.status) %>
     <%= button_to "Delete", feature_request, method: :delete,
                   data: { turbo_confirm: "Remove this card? (Does not touch git history.)" },

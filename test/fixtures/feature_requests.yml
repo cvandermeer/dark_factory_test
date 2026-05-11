@@ -37,3 +37,10 @@ failed_one:
   review_body: stale review
   stop_requested_at: 2026-05-11 10:05:00
   source: manual
+
+failed_idea:
+  title: Automatic idea generation failed
+  body: Automatic mode tried to create the next feature request, but the idea agent failed.
+  status: failed
+  failure_reason: "idea_parse_failed: malformed JSON"
+  source: automatic

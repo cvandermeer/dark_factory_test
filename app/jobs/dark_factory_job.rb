@@ -1,7 +1,10 @@
 class DarkFactoryJob < ApplicationJob
   class NoChangesMade < StandardError; end
   class ReviewRejected < StandardError; end
+  class ProtectedFileChanged < StandardError; end
   class StopRequested < StandardError; end
+
+  PROTECTED_AGENT_PATHS = %w[docs/project_vision.md].freeze
 
   queue_as :default
 
@@ -17,6 +20,7 @@ class DarkFactoryJob < ApplicationJob
       AgentRunner.new(feature_request: fr, worktree_path: worktree.path).run!
       check_stop!(fr)
       ensure_agent_made_commits!(worktree.path)
+      ensure_protected_files_unchanged!(worktree.path)
       review = review!(fr, worktree.path)
       check_stop!(fr)
 
@@ -24,6 +28,7 @@ class DarkFactoryJob < ApplicationJob
         fr.update!(status: "addressing_feedback", feedback_addressed: true)
         address_feedback!(fr, worktree.path, review.body)
         check_stop!(fr)
+        ensure_protected_files_unchanged!(worktree.path)
         review = review!(fr, worktree.path)
         if review.verdict == "changes_requested"
           raise ReviewRejected, "review_changes_unresolved: #{review.body}"
@@ -50,6 +55,8 @@ class DarkFactoryJob < ApplicationJob
       fr.update!(status: "failed", failure_reason: e.message)
     rescue NoChangesMade => e
       fr.update!(status: "failed", failure_reason: e.message)
+    rescue ProtectedFileChanged => e
+      fr.update!(status: "failed", failure_reason: e.message)
     rescue ReviewVerdictParser::Error => e
       fr.update!(status: "failed", failure_reason: "review_parse_failed: #{e.message}")
     rescue ReviewRejected => e
@@ -74,6 +81,16 @@ class DarkFactoryJob < ApplicationJob
     out, _err, status = Open3.capture3("git", "-C", worktree_path, "rev-list", "--count", "main..HEAD")
     count = status.success? ? out.strip.to_i : 0
     raise NoChangesMade, "no_changes_made: agent finished without committing anything" if count.zero?
+  end
+
+  def ensure_protected_files_unchanged!(worktree_path)
+    out, err, status = Open3.capture3("git", "-C", worktree_path, "diff", "--name-only", "main...HEAD")
+    raise MainlineLandinger::Error, "diff_failed: #{err.presence || out}" unless status.success?
+
+    changed_protected_paths = out.lines.map(&:strip) & PROTECTED_AGENT_PATHS
+    return if changed_protected_paths.empty?
+
+    raise ProtectedFileChanged, "protected_file_changed: agents may not modify #{changed_protected_paths.join(', ')}"
   end
 
   def review!(fr, worktree_path)

@@ -39,4 +39,17 @@ class FeatureRequestsRetryTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
   end
+
+  test "retries automatic idea generation failures with the idea job" do
+    fr = feature_requests(:failed_idea)
+
+    assert_enqueued_with(job: IdeaGenerationJob) do
+      assert_no_enqueued_jobs only: DarkFactoryJob do
+        post retry_feature_request_url(fr)
+      end
+    end
+
+    assert_redirected_to root_url
+    assert_equal "failed", fr.reload.status
+  end
 end

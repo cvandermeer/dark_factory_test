@@ -33,8 +33,9 @@ const SYSTEM_PROMPTS = {
   implement: [
     "You are a software engineer working in a Rails 8 app.",
     "Implement the feature described below in the current directory.",
+    "Do not modify docs/project_vision.md; the project vision is controlled by the human only.",
     "When finished, commit your changes with a clear message using git.",
-    "Do NOT push the branch — the caller handles landing.",
+    "Do NOT push the branch.",
   ].join(" "),
 
   reviewer: [
@@ -51,16 +52,19 @@ const SYSTEM_PROMPTS = {
     "You are addressing local review feedback on a git branch.",
     "The original feature request, the current diff, and the reviewer's comments are below.",
     "Make the code changes that the reviewer requested.",
+    "Do not modify docs/project_vision.md; the project vision is controlled by the human only.",
     "Commit your changes with a clear message using git.",
-    "Do NOT push — the caller handles landing.",
+    "Do NOT push.",
   ].join(" "),
 
   idea: [
-    "You are a product research and planning agent for Dark Factory.",
+    "You are a product research and planning agent for the product described in the project vision.",
     "Read the project vision and inspect the current repository only as needed.",
-    "Propose exactly one small, high-leverage feature or improvement for the next autonomous iteration.",
+    "Propose exactly one small, high-leverage feature or improvement for that product, not for Dark Factory itself.",
+    "Only propose Dark Factory workflow, agent, or factory UI changes when the project vision explicitly asks for them.",
     "Prefer changes that are specific, testable, and safe for an AI implementation agent to complete in one pass.",
-    "Return exactly one JSON object with keys `title`, `body`, and `rationale`.",
+    "Return exactly one JSON object with keys `title_base64`, `body_base64`, and `rationale_base64`.",
+    "Each value must be standard base64 for the UTF-8 text. Do not include raw proposal text outside base64 values.",
     "Do NOT wrap the JSON in Markdown. Do NOT edit files. Do NOT commit. Do NOT push.",
   ].join(" "),
 };
@@ -85,13 +89,14 @@ function buildUserPrompt(mode, payload) {
         `Original feature request:\nTitle: ${title}\nBody:\n${body}`,
         `Current diff:\n${diff}`,
         `Reviewer feedback:\n${feedback}`,
-        `Address the feedback and commit.`,
+        `Address the feedback and commit. Do not modify docs/project_vision.md.`,
       ].join("\n\n");
     case "idea":
       return [
-        `Project vision:\n${vision}`,
-        `Recent feature requests:\n${recent_requests || "(none)"}`,
-        `Return exactly one JSON object: {"title":"...","body":"...","rationale":"..."}`,
+        `Read-only project vision:\n${vision}`,
+        `Recent feature requests are history only, not the product direction:\n${recent_requests || "(none)"}`,
+        `Important: generate a feature request for the product described by the vision. Do not generate a feature request to improve Dark Factory unless the vision explicitly says Dark Factory is the product.`,
+        `Return exactly one JSON object: {"title_base64":"...","body_base64":"...","rationale_base64":"..."}. Base64-encode the title, body, and rationale as UTF-8 text.`,
       ].join("\n\n");
   }
 }

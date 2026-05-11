@@ -34,7 +34,6 @@ class MainlineLandinger
         check_stop!
         sha = current_sha
         sync_repo_main_to_landed_commit(sha)
-        push_best_effort
         sha
       ensure
         teardown_landing_worktree!
@@ -62,12 +61,6 @@ class MainlineLandinger
 
   def commit!
     run!("git", "commit", "-m", commit_message)
-  end
-
-  def push_best_effort
-    run!("git", "push", "origin", "HEAD:main", failure_prefix: "push_main_failed")
-  rescue Error => e
-    Rails.logger.warn("[MainlineLandinger] remote push skipped: #{e.message}")
   end
 
   def current_sha

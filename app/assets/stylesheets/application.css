@@ -55,6 +55,50 @@ body {
   color: #111;
 }
 
+.factory-mode__job {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 5px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: #f9fafb;
+  color: #4b5563;
+  font-size: 12px;
+}
+
+.factory-mode__job a {
+  color: #111827;
+  font-weight: 600;
+}
+
+.factory-mode__job-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+.factory-mode__job--running .factory-mode__job-dot {
+  background: #22c55e;
+  animation: fr-pulse 1.1s ease-in-out infinite;
+}
+
+.factory-mode__job--queued .factory-mode__job-dot,
+.factory-mode__job--scheduled .factory-mode__job-dot {
+  background: #f59e0b;
+}
+
+.factory-mode__job--failed .factory-mode__job-dot {
+  background: #ef4444;
+}
+
+@keyframes fr-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
 .factory-mode__form input[type="submit"] {
   background: #111;
   color: white;
@@ -177,6 +221,12 @@ body {
   font-size: 11px; color: #999;
 }
 .fr-card__delete:hover { color: #b00020; }
+.fr-card__retry {
+  position: absolute; top: 6px; right: 54px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 11px; color: #111827;
+}
+.fr-card__retry:hover { color: #2563eb; }
 .fr-card__stop {
   position: absolute; top: 6px; right: 6px;
   background: transparent; border: none; cursor: pointer;

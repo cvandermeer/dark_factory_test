@@ -3,6 +3,7 @@ class FeatureRequestsController < ApplicationController
     @feature_requests = FeatureRequest.order(created_at: :desc)
     @feature_request = FeatureRequest.new
     @factory_setting = FactorySetting.current
+    @idea_job_status = idea_job_status
   end
 
   def show
@@ -40,6 +41,11 @@ class FeatureRequestsController < ApplicationController
       return render plain: "Feature request is not in a failed state.", status: :unprocessable_entity
     end
 
+    if automatic_idea_failure?(feature_request)
+      IdeaGenerationJob.perform_later
+      return redirect_to root_path, notice: "Automatic idea generation has been re-queued."
+    end
+
     feature_request.update!(
       status: "todo",
       failure_reason: nil,
@@ -60,5 +66,31 @@ class FeatureRequestsController < ApplicationController
 
   def feature_request_params
     params.require(:feature_request).permit(:title, :body)
+  end
+
+  def automatic_idea_failure?(feature_request)
+    feature_request.source == "automatic" &&
+      feature_request.title == "Automatic idea generation failed" &&
+      feature_request.failure_reason.to_s.start_with?("idea_")
+  end
+
+  def idea_job_status
+    if (execution = SolidQueue::ClaimedExecution.includes(:job).where(solid_queue_jobs: { class_name: "IdeaGenerationJob" }).order(created_at: :desc).first)
+      return { state: "running", job: execution.job, timestamp: execution.created_at }
+    end
+
+    if (execution = SolidQueue::ReadyExecution.includes(:job).where(solid_queue_jobs: { class_name: "IdeaGenerationJob" }).order(:priority, :job_id).first)
+      return { state: "queued", job: execution.job, timestamp: execution.job.created_at }
+    end
+
+    if (execution = SolidQueue::ScheduledExecution.includes(:job).where(solid_queue_jobs: { class_name: "IdeaGenerationJob" }).order(:scheduled_at, :priority).first)
+      return { state: "scheduled", job: execution.job, timestamp: execution.scheduled_at }
+    end
+
+    if (execution = SolidQueue::FailedExecution.includes(:job).where(solid_queue_jobs: { class_name: "IdeaGenerationJob" }).order(created_at: :desc).first)
+      return { state: "failed", job: execution.job, timestamp: execution.created_at }
+    end
+
+    { state: "idle" }
   end
 end

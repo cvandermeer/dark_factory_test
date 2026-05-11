@@ -19,6 +19,25 @@
         mode runs only the requests you submit. Edit the <%= link_to "project vision", project_vision_path %> before turning on automatic.
       <% end %>
     </p>
+    <div class="factory-mode__job factory-mode__job--<%= @idea_job_status[:state] %>">
+      <span class="factory-mode__job-dot"></span>
+      <span>
+        Idea generation:
+        <% case @idea_job_status[:state] %>
+        <% when "running" %>
+          running as job #<%= @idea_job_status[:job].id %>
+        <% when "queued" %>
+          queued as job #<%= @idea_job_status[:job].id %>
+        <% when "scheduled" %>
+          scheduled for <%= time_ago_in_words(@idea_job_status[:timestamp]) %> from now
+        <% when "failed" %>
+          last job failed
+        <% else %>
+          idle
+        <% end %>
+      </span>
+      <%= link_to "Details", jobs_path %>
+    </div>
   </div>
 
   <%= form_with(model: @factory_setting, url: factory_setting_path, method: :patch, class: "factory-mode__form") do |f| %>
