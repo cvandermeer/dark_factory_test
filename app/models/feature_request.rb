@@ -39,11 +39,16 @@ class FeatureRequest < ApplicationRecord
   end
 
   after_create_commit :enqueue_dark_factory_job, if: -> { status == "todo" }
+  after_update_commit :enqueue_next_automatic_idea_job, if: -> { saved_change_to_status? && status == "done" }
 
   private
 
   def enqueue_dark_factory_job
     DarkFactoryJob.perform_later(id)
+  end
+
+  def enqueue_next_automatic_idea_job
+    IdeaGenerationJob.perform_later if FactorySetting.automatic?
   end
 
   def broadcast_card_refresh

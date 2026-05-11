@@ -42,7 +42,6 @@ class DarkFactoryJob < ApplicationJob
         stop_requested: -> { fr.reload.stop_requested? }
       ).land!
       fr.update!(status: "done", landed_commit_sha: landed_sha)
-      IdeaGenerationJob.perform_later if FactorySetting.automatic?
     rescue StopRequested, AgentRunner::Stopped, MainlineLandinger::Stopped
       fr.update!(status: "stopped", failure_reason: "stopped_by_user")
     rescue AgentRunner::Timeout

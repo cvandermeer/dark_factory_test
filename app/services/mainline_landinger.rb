@@ -32,9 +32,9 @@ class MainlineLandinger
         check_stop!
         commit!
         check_stop!
-        push!
         sha = current_sha
-        sync_repo_main_if_clean
+        sync_repo_main_to_landed_commit(sha)
+        push_best_effort
         sha
       ensure
         teardown_landing_worktree!
@@ -64,8 +64,10 @@ class MainlineLandinger
     run!("git", "commit", "-m", commit_message)
   end
 
-  def push!
+  def push_best_effort
     run!("git", "push", "origin", "HEAD:main", failure_prefix: "push_main_failed")
+  rescue Error => e
+    Rails.logger.warn("[MainlineLandinger] remote push skipped: #{e.message}")
   end
 
   def current_sha
@@ -105,15 +107,14 @@ class MainlineLandinger
     FileUtils.rm_rf(@landing_path)
   end
 
-  def sync_repo_main_if_clean
+  def sync_repo_main_to_landed_commit(sha)
     branch = run_in_repo!("git", "branch", "--show-current").strip
     return unless branch == "main"
 
     status = run_in_repo!("git", "status", "--porcelain").strip
     return if status.present?
 
-    run_in_repo!("git", "fetch", "origin", "main")
-    run_in_repo!("git", "pull", "--ff-only", "origin", "main")
+    run_in_repo!("git", "merge", "--ff-only", sha)
   rescue Error => e
     Rails.logger.warn("[MainlineLandinger] local main sync skipped: #{e.message}")
   end
