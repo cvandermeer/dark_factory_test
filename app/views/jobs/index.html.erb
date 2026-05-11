@@ -1,0 +1,66 @@
+<% content_for :title, "Jobs - Dark Factory" %>
+
+<div class="jobs-page">
+  <nav class="info-nav">
+    <%= link_to "← Back to board", root_path %>
+  </nav>
+
+  <h1 class="info-title">Jobs</h1>
+  <p class="info-subtitle">
+    Current Solid Queue work: running, ready, scheduled, failed, and worker heartbeats.
+  </p>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Running</h2>
+    <%= render "jobs/table", executions: @claimed_executions, empty: "No jobs are running." %>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Queued</h2>
+    <%= render "jobs/table", executions: @ready_executions, empty: "No jobs are queued." %>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Scheduled</h2>
+    <%= render "jobs/table", executions: @scheduled_executions, empty: "No jobs are scheduled." %>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Failed</h2>
+    <% if @failed_executions.any? %>
+      <div class="jobs-list">
+        <% @failed_executions.each do |execution| %>
+          <% job = execution.job %>
+          <div class="jobs-row jobs-row--failed">
+            <div>
+              <strong><%= job.class_name %></strong>
+              <span><%= job.queue_name %> · job #<%= job.id %></span>
+            </div>
+            <pre><%= truncate(execution.error.to_s, length: 700) %></pre>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="jobs-empty">No failed jobs.</p>
+    <% end %>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Workers</h2>
+    <% if @processes.any? %>
+      <div class="jobs-list">
+        <% @processes.each do |process| %>
+          <div class="jobs-row">
+            <div>
+              <strong><%= process.kind %></strong>
+              <span><%= process.hostname %> pid <%= process.pid %></span>
+            </div>
+            <span>heartbeat <%= time_ago_in_words(process.last_heartbeat_at) %> ago</span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="jobs-empty">No worker processes have checked in.</p>
+    <% end %>
+  </section>
+</div>

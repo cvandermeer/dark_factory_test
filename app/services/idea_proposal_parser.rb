@@ -28,11 +28,23 @@ class IdeaProposalParser
   private
 
   def extract_json
+    result = extract_result_string
+    return result if result.present?
+
     return @text if @text.start_with?("{") && @text.end_with?("}")
 
     match = @text.match(/\{.*\}/m)
     raise Error, "no JSON object found in idea output" unless match
 
     match[0]
+  end
+
+  def extract_result_string
+    match = @text.match(/"result"=>("(?:\\.|[^"\\])*")/m)
+    return unless match
+
+    JSON.parse(match[1]).to_s.strip
+  rescue JSON::ParserError
+    nil
   end
 end

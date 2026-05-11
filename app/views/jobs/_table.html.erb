@@ -1,0 +1,22 @@
+<% if executions.any? %>
+  <div class="jobs-list">
+    <% executions.each do |execution| %>
+      <% job = execution.job %>
+      <div class="jobs-row">
+        <div>
+          <strong><%= job.class_name %></strong>
+          <span><%= job.queue_name %> · job #<%= job.id %></span>
+        </div>
+        <span>
+          <% if execution.respond_to?(:scheduled_at) && execution.scheduled_at.present? %>
+            runs <%= time_ago_in_words(execution.scheduled_at) %> from now
+          <% else %>
+            enqueued <%= time_ago_in_words(job.created_at) %> ago
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="jobs-empty"><%= empty %></p>
+<% end %>

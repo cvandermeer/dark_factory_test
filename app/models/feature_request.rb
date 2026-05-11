@@ -38,7 +38,7 @@ class FeatureRequest < ApplicationRecord
     branch_name || "feature-request/#{id}-#{slug}"
   end
 
-  after_create_commit :enqueue_dark_factory_job
+  after_create_commit :enqueue_dark_factory_job, if: -> { status == "todo" }
 
   private
 

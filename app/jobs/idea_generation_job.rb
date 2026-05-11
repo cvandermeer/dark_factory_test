@@ -24,6 +24,13 @@ class IdeaGenerationJob < ApplicationJob
     )
   rescue IdeaAgentRunner::Error => e
     Rails.logger.warn("[IdeaGenerationJob] #{e.class}: #{e.message}")
+    FeatureRequest.create!(
+      title: "Automatic idea generation failed",
+      body: "Automatic mode tried to create the next feature request, but the idea agent failed.\n\n#{e.message}",
+      source: "automatic",
+      status: "failed",
+      failure_reason: e.message
+    )
   end
 
   private

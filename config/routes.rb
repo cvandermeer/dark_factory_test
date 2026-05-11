@@ -2,9 +2,11 @@ Rails.application.routes.draw do
   root "feature_requests#index"
   resources :feature_requests, only: [:index, :show, :create, :destroy] do
     post :stop, on: :member
+    post :retry, on: :member
   end
   resource :factory_setting, only: [:update]
   resource :project_vision, only: [:show, :update]
+  resources :jobs, only: [:index]
 
   get "info"   => "pages#info",   as: :info
   get "faq" => "pages#faq", as: :faq

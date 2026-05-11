@@ -39,7 +39,7 @@ const SYSTEM_PROMPTS = {
 
   reviewer: [
     "You are reviewing a local git branch before it is landed on main.",
-    "Read the diff in the current directory using `git diff origin/main...HEAD`.",
+    "Read the diff in the current directory using `git diff main...HEAD`.",
     "Compare the diff against the feature request title and body provided below.",
     "If there are real correctness, scope, or quality issues, return JSON with verdict `changes_requested` and a concise body.",
     "If there are no real issues, return JSON with verdict `approved` and a concise body.",
@@ -77,7 +77,7 @@ function buildUserPrompt(mode, payload) {
     case "reviewer":
       return [
         `Original feature request:\nTitle: ${title}\nBody:\n${body}`,
-        `Use \`git diff origin/main...HEAD\` to read the diff.`,
+        `Use \`git diff main...HEAD\` to read the diff.`,
         `Return exactly one JSON object: {"verdict":"approved|changes_requested","body":"..."}`,
       ].join("\n\n");
     case "address":

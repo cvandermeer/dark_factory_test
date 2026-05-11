@@ -72,7 +72,7 @@ class DarkFactoryJob < ApplicationJob
   end
 
   def ensure_agent_made_commits!(worktree_path)
-    out, _err, status = Open3.capture3("git", "-C", worktree_path, "rev-list", "--count", "origin/main..HEAD")
+    out, _err, status = Open3.capture3("git", "-C", worktree_path, "rev-list", "--count", "main..HEAD")
     count = status.success? ? out.strip.to_i : 0
     raise NoChangesMade, "no_changes_made: agent finished without committing anything" if count.zero?
   end
@@ -99,7 +99,7 @@ class DarkFactoryJob < ApplicationJob
 
   def address_feedback!(fr, worktree_path, feedback)
     check_stop!(fr)
-    before_count = commit_count(worktree_path, "origin/main..HEAD")
+    before_count = commit_count(worktree_path, "main..HEAD")
     AgentRunner.new(
       feature_request: fr,
       worktree_path: worktree_path,
@@ -112,7 +112,7 @@ class DarkFactoryJob < ApplicationJob
       }
     ).run!
 
-    after_count = commit_count(worktree_path, "origin/main..HEAD")
+    after_count = commit_count(worktree_path, "main..HEAD")
     if after_count <= before_count
       raise NoChangesMade, "address_no_changes: agent finished without committing anything"
     end
@@ -132,7 +132,7 @@ class DarkFactoryJob < ApplicationJob
   end
 
   def diff(worktree_path)
-    out, err, status = Open3.capture3("git", "-C", worktree_path, "diff", "origin/main...HEAD")
+    out, err, status = Open3.capture3("git", "-C", worktree_path, "diff", "main...HEAD")
     raise MainlineLandinger::Error, "diff_failed: #{err.presence || out}" unless status.success?
 
     out

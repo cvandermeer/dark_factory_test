@@ -34,6 +34,28 @@ class FeatureRequestsController < ApplicationController
     redirect_back fallback_location: root_path
   end
 
+  def retry
+    feature_request = FeatureRequest.find(params[:id])
+    unless feature_request.status == "failed"
+      return render plain: "Feature request is not in a failed state.", status: :unprocessable_entity
+    end
+
+    feature_request.update!(
+      status: "todo",
+      failure_reason: nil,
+      branch_name: nil,
+      feedback_addressed: false,
+      last_review_seen_at: nil,
+      landed_commit_sha: nil,
+      review_verdict: nil,
+      review_body: nil,
+      stop_requested_at: nil
+    )
+    DarkFactoryJob.perform_later(feature_request.id)
+
+    redirect_to feature_request, notice: "Feature request has been re-queued."
+  end
+
   private
 
   def feature_request_params

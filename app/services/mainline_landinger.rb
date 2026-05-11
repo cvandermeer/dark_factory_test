@@ -46,8 +46,7 @@ class MainlineLandinger
 
   def prepare_landing_worktree!
     FileUtils.mkdir_p(File.dirname(@landing_path))
-    run_in_repo!("git", "fetch", "origin", "main")
-    run_in_repo!("git", "worktree", "add", "-b", @landing_branch, @landing_path, "origin/main")
+    run_in_repo!("git", "worktree", "add", "-b", @landing_branch, @landing_path, "main")
   end
 
   def squash_merge!

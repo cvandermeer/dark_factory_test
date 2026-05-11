@@ -23,4 +23,8 @@
       <pre><%= feature_request.failure_reason %></pre>
     </div>
   <% end %>
+  <% if feature_request.status == "failed" %>
+    <%= button_to "Retry", retry_feature_request_path(feature_request), method: :post,
+                  class: "fr-show__retry" %>
+  <% end %>
 </header>

@@ -43,25 +43,31 @@ class IdeaAgentRunner
   private
 
   def extract_assistant_text(stdout)
-    texts = stdout.lines.filter_map do |line|
-      raw = JSON.parse(line).fetch("raw")
-      next unless raw["type"] == "assistant" || raw["type"] == "text"
+    result_texts = []
+    assistant_texts = []
 
-      extract_text(raw)
+    stdout.lines.each do |line|
+      raw = JSON.parse(line).fetch("raw")
+      if raw["type"] == "result" && raw["result"].present?
+        result_texts << raw["result"].to_s
+      elsif raw["type"] == "assistant" || raw["type"] == "text"
+        text = extract_text(raw)
+        assistant_texts << text if text.present?
+      end
     rescue JSON::ParserError, KeyError
-      nil
+      next
     end
 
-    text = texts.join("\n").strip
+    text = (result_texts.last || assistant_texts.join("\n")).to_s.strip
     raise Error, "idea_agent_produced_no_text" if text.blank?
 
     text
   end
 
   def extract_text(msg)
-    content = msg["content"] || msg["text"]
+    content = msg.dig("message", "content") || msg["content"] || msg["text"]
     return content if content.is_a?(String)
-    return content.map { |c| c.is_a?(Hash) ? c["text"].to_s : c.to_s }.join if content.is_a?(Array)
+    return content.filter_map { |c| c.is_a?(Hash) && c["type"] == "text" ? c["text"].to_s : nil }.join if content.is_a?(Array)
 
     nil
   end
