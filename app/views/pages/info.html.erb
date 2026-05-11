@@ -3,13 +3,14 @@
 <div class="info-page">
   <nav class="info-nav">
     <%= link_to "← Back to board", root_path %>
+    <%= link_to "Stats", stats_path %>
   </nav>
 
   <h1 class="info-title">How Dark Factory Works</h1>
   <p class="info-subtitle">
     Dark Factory is a self-building Rails application — you describe a feature,
-    and AI agents write the code, open a pull request, and review their own work,
-    all without you touching a keyboard.
+    and AI agents write the code, review it locally, run verification, and land
+    the finished change on main.
   </p>
 
   <!-- ── SECTION 1: The Big Picture ── -->
@@ -39,15 +40,15 @@
       <div class="info-step">
         <span class="info-step__num">3</span>
         <div>
-          <strong>The agent opens a pull request</strong> on GitHub with all the changes, then
-          a second agent reviews the code against your original description.
+          <strong>A review agent checks the local diff</strong> against your original
+          description and returns an approved or changes requested verdict.
         </div>
       </div>
       <div class="info-step">
         <span class="info-step__num">4</span>
         <div>
-          <strong>If changes are needed</strong>, a third agent reads the review feedback and
-          updates the code automatically. Once everything looks good, you merge.
+          <strong>If changes are needed</strong>, a third agent reads the review feedback,
+          updates the code automatically, and the system lands the verified result on main.
         </div>
       </div>
     </div>
@@ -63,14 +64,14 @@
     </p>
     <p>
       This app borrows the same idea for software: once you submit a request the lights go out
-      and the agents take over. They read the codebase, write the code, commit it, push it,
-      and open a pull request — all without anyone in the loop. The only human step is
-      reviewing and merging the finished PR.
+      and the agents take over. They read the codebase, write the code, commit it, review it,
+      verify it, and land it on main — all without anyone in the loop. The human step is
+      auditing the finished commit afterward.
     </p>
     <div class="info-callout">
       <strong>Fun detail:</strong> Dark Factory can improve itself. Submit a feature request
       asking for a new capability, and the agents will implement it in their own codebase and
-      open a PR against the same repo you are looking at right now.
+      land the change against the same repo you are looking at right now.
     </div>
   </section>
 
@@ -91,7 +92,7 @@
           <p class="info-agent__desc">
             The builder. It reads your feature request, explores the codebase to understand
             how it works, writes or edits the files it needs to change, and commits the result.
-            When it is done it pushes the branch and opens a pull request on GitHub.
+            When it is done, the local review and landing pipeline takes over.
           </p>
           <ul class="info-agent__facts">
             <li>Triggered automatically when you submit a request</li>
@@ -107,14 +108,14 @@
         <div class="info-agent__body">
           <h3 class="info-agent__name">Review Agent</h3>
           <p class="info-agent__desc">
-            The quality checker. It reads the pull request diff, compares it against your
-            original description, and posts a formal GitHub review: either an approval or a
-            list of requested changes with specific comments.
+            The quality checker. It reads the local branch diff, compares it against your
+            original description, and returns a structured verdict: either approved or a
+            list of requested changes.
           </p>
           <ul class="info-agent__facts">
-            <li>Fires automatically after the Implementation Agent opens a PR</li>
-            <li>Posts a real GitHub PR review (Approved or Changes Requested)</li>
-            <li>If it requests changes, the card moves to the <em>Review Feedback</em> column</li>
+            <li>Fires automatically after the Implementation Agent commits</li>
+            <li>Stores the verdict directly in Dark Factory</li>
+            <li>If it requests changes, the Feedback Agent gets one pass to fix them</li>
           </ul>
         </div>
       </div>
@@ -125,12 +126,11 @@
           <h3 class="info-agent__name">Feedback Agent</h3>
           <p class="info-agent__desc">
             The fixer. When the Review Agent asks for changes, this agent reads every comment,
-            makes the necessary edits, commits them, and pushes to the same PR branch so the
-            review can be re-evaluated.
+            makes the necessary edits, and commits them to the same local branch before landing.
           </p>
           <ul class="info-agent__facts">
-            <li>Triggered automatically when a <em>Changes Requested</em> review is detected</li>
-            <li>Edits the existing PR branch in place — no new branch created</li>
+            <li>Triggered automatically when a <em>Changes Requested</em> verdict is detected</li>
+            <li>Edits the existing agent branch in place — no new branch created</li>
             <li>Runs at most once per feature request to prevent infinite loops</li>
           </ul>
         </div>
@@ -153,15 +153,27 @@
       </div>
       <div class="info-col info-col--doing">
         <strong>Doing</strong>
-        <span>An agent is actively working right now. Watch the live event stream on the detail page.</span>
+        <span>The implementation agent is actively working. Watch the live event stream on the detail page.</span>
       </div>
-      <div class="info-col info-col--to_review">
-        <strong>To Review</strong>
-        <span>A pull request is open on GitHub. The Review Agent has run (or is running). Waiting for a human merge.</span>
+      <div class="info-col info-col--reviewing">
+        <strong>Reviewing</strong>
+        <span>The review agent is checking the local diff against the feature request.</span>
       </div>
-      <div class="info-col info-col--review_feedback">
-        <strong>Review Feedback</strong>
-        <span>The Review Agent asked for changes. The Feedback Agent will address them automatically.</span>
+      <div class="info-col info-col--addressing_feedback">
+        <strong>Addressing Feedback</strong>
+        <span>The review agent asked for changes. The Feedback Agent is addressing them automatically.</span>
+      </div>
+      <div class="info-col info-col--landing">
+        <strong>Landing</strong>
+        <span>The verified branch is being squashed and pushed to main.</span>
+      </div>
+      <div class="info-col info-col--done">
+        <strong>Done</strong>
+        <span>The change landed on main. Open the card to inspect the landed commit SHA.</span>
+      </div>
+      <div class="info-col info-col--stopped">
+        <strong>Stopped</strong>
+        <span>You stopped the iteration loop before it landed.</span>
       </div>
       <div class="info-col info-col--failed">
         <strong>Failed</strong>

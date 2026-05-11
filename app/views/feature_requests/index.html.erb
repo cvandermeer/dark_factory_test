@@ -2,16 +2,37 @@
 
 <nav class="board-nav">
   <%= link_to "How it works", info_path %>
+  <%= link_to "Vision", project_vision_path %>
+  <%= link_to "Stats", stats_path %>
   <%= link_to "FAQ", faq_path %>
 </nav>
 
+<section class="factory-mode">
+  <div>
+    <h2>Factory mode</h2>
+    <p>
+      <strong><%= @factory_setting.mode.humanize %></strong>
+      <% if @factory_setting.automatic? %>
+        mode is generating the next request from the <%= link_to "project vision", project_vision_path %>.
+      <% else %>
+        mode runs only the requests you submit. Edit the <%= link_to "project vision", project_vision_path %> before turning on automatic.
+      <% end %>
+    </p>
+  </div>
+
+  <%= form_with(model: @factory_setting, url: factory_setting_path, method: :patch, class: "factory-mode__form") do |f| %>
+    <%= f.hidden_field :mode, value: @factory_setting.automatic? ? "manual" : "automatic" %>
+    <%= f.submit(@factory_setting.automatic? ? "Switch to manual" : "Turn on automatic") %>
+  <% end %>
+</section>
+
 <section class="fr-submit">
-  <h2>Submit a feature request</h2>
+  <h2>Manual request</h2>
   <%= render "form", feature_request: @feature_request %>
 </section>
 
 <section class="fr-board">
-  <% %w[todo doing to_review reviewing review_feedback failed].each do |col| %>
+  <% %w[todo doing reviewing addressing_feedback landing done stopped failed].each do |col| %>
     <div class="fr-column">
       <h3 class="fr-column__title"><%= col.humanize %></h3>
       <div id="fr-column-<%= col %>" class="fr-column__cards">

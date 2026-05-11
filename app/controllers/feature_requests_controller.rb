@@ -2,6 +2,7 @@ class FeatureRequestsController < ApplicationController
   def index
     @feature_requests = FeatureRequest.order(created_at: :desc)
     @feature_request = FeatureRequest.new
+    @factory_setting = FactorySetting.current
   end
 
   def show
@@ -22,6 +23,15 @@ class FeatureRequestsController < ApplicationController
   def destroy
     FeatureRequest.find(params[:id]).destroy
     redirect_to root_path
+  end
+
+  def stop
+    feature_request = FeatureRequest.find(params[:id])
+    if feature_request.active?
+      feature_request.update!(stop_requested_at: Time.current)
+    end
+
+    redirect_back fallback_location: root_path
   end
 
   private

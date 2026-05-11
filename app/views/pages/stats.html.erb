@@ -1,0 +1,107 @@
+<% content_for :title, "Stats - Dark Factory" %>
+
+<div class="stats-page">
+  <nav class="info-nav">
+    <%= link_to "← Back to board", root_path %>
+    <%= link_to "How it works", info_path %>
+  </nav>
+
+  <h1 class="info-title">Stats</h1>
+  <p class="info-subtitle">
+    A live snapshot of the autonomous iteration pipeline.
+  </p>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Overview</h2>
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-card__value"><%= @total %></div>
+        <div class="stats-card__label">Requests submitted</div>
+      </div>
+      <div class="stats-card stats-card--success">
+        <div class="stats-card__value"><%= @done %></div>
+        <div class="stats-card__label">Landed on main</div>
+      </div>
+      <div class="stats-card stats-card--highlight">
+        <div class="stats-card__value"><%= @automatic %></div>
+        <div class="stats-card__label">Automatic ideas</div>
+      </div>
+      <div class="stats-card stats-card--warning">
+        <div class="stats-card__value"><%= @stopped %></div>
+        <div class="stats-card__label">Stopped</div>
+      </div>
+      <div class="stats-card stats-card--danger">
+        <div class="stats-card__value"><%= @failed %></div>
+        <div class="stats-card__label">Failed</div>
+      </div>
+      <% if @success_rate %>
+        <div class="stats-card stats-card--highlight">
+          <div class="stats-card__value"><%= @success_rate %>%</div>
+          <div class="stats-card__label">Landing rate</div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Requests by Status</h2>
+    <div class="stats-status-list">
+      <% status_meta = {
+        "todo" => { label: "Todo", color: "#d1d5db" },
+        "doing" => { label: "Doing", color: "#3b82f6" },
+        "reviewing" => { label: "Reviewing", color: "#f59e0b" },
+        "addressing_feedback" => { label: "Addressing Feedback", color: "#a855f7" },
+        "landing" => { label: "Landing", color: "#22c55e" },
+        "done" => { label: "Done", color: "#64748b" },
+        "stopped" => { label: "Stopped", color: "#78716c" },
+        "failed" => { label: "Failed", color: "#ef4444" },
+      } %>
+      <% @by_status.each do |status, count| %>
+        <% meta = status_meta[status] %>
+        <% next unless meta %>
+        <div class="stats-status-row" style="border-left-color: <%= meta[:color] %>">
+          <span class="stats-status-row__label"><%= meta[:label] %></span>
+          <span class="stats-status-row__count"><%= count %></span>
+          <% if @total.positive? %>
+            <div class="stats-bar-wrap">
+              <div class="stats-bar" style="width: <%= (count.to_f / @total * 100).round(1) %>%; background: <%= meta[:color] %>"></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Agent Activity</h2>
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-card__value"><%= @total_events %></div>
+        <div class="stats-card__label">Agent events</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-card__value"><%= @tool_calls %></div>
+        <div class="stats-card__label">Tool calls</div>
+      </div>
+      <div class="stats-card stats-card--danger">
+        <div class="stats-card__value"><%= @errors %></div>
+        <div class="stats-card__label">Agent errors</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <h2 class="info-section__heading">Active Agents</h2>
+    <p class="info-section__lead">
+      Dark Factory currently uses an idea agent, an implementation agent, a review agent,
+      and a feedback agent. Manual mode starts from your request; automatic mode starts
+      from the project vision.
+    </p>
+  </section>
+
+  <div class="info-footer">
+    <%= link_to "← Back to board", root_path, class: "info-footer__link" %>
+    <%= link_to "How it works", info_path, class: "info-footer__link" %>
+    <%= link_to "FAQ", faq_path, class: "info-footer__link" %>
+  </div>
+</div>

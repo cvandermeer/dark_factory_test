@@ -3,17 +3,23 @@
 one:
   title: MyString
   body: MyText
-  status: MyString
+  status: todo
   branch_name: MyString
-  pr_url: MyString
-  pr_merged_at: 2026-04-24 15:11:27
   failure_reason: MyText
+  landed_commit_sha:
+  review_verdict:
+  review_body:
+  stop_requested_at:
+  source: manual
 
 two:
   title: MyString
   body: MyText
-  status: MyString
+  status: done
   branch_name: MyString
-  pr_url: MyString
-  pr_merged_at: 2026-04-24 15:11:27
   failure_reason: MyText
+  landed_commit_sha: abc1234
+  review_verdict: approved
+  review_body: Looks good.
+  stop_requested_at:
+  source: manual

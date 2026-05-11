@@ -7,7 +7,7 @@ class WorktreeManager
 
   # mode: :create_branch (default) — `git worktree add -b <branch> <path> <base>` creates a new branch.
   # mode: :checkout_existing — `git worktree add <path> <branch>` checks out an existing branch.
-  def initialize(repo_root:, branch:, base: "main", mode: :create_branch)
+  def initialize(repo_root:, branch:, base: "origin/main", mode: :create_branch)
     raise ArgumentError, "unknown mode #{mode}" unless MODES.include?(mode)
     @repo_root = repo_root
     @branch = branch
@@ -20,6 +20,7 @@ class WorktreeManager
     FileUtils.mkdir_p(File.dirname(@path))
     case @mode
     when :create_branch
+      run!("git", "-C", @repo_root, "fetch", "origin", "main")
       run!("git", "-C", @repo_root, "worktree", "add", "-b", @branch, @path, @base)
     when :checkout_existing
       run!("git", "-C", @repo_root, "fetch", "origin", @branch)

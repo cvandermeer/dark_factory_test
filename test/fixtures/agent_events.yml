@@ -2,12 +2,14 @@
 
 one:
   feature_request: one
-  kind: MyString
-  payload: 
+  kind: system
+  payload:
+    message: fixture event
   sequence: 1
 
 two:
   feature_request: two
-  kind: MyString
-  payload: 
+  kind: system
+  payload:
+    message: fixture event
   sequence: 1

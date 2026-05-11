@@ -1,23 +1,34 @@
 class FeatureRequest < ApplicationRecord
-  STATUSES = %w[todo doing to_review reviewing review_feedback failed].freeze
+  STATUSES = %w[todo doing reviewing addressing_feedback landing done stopped failed].freeze
+  SOURCES = %w[manual automatic].freeze
 
   has_many :agent_events, -> { order(:sequence) }, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 200 }
   validates :body, presence: true
   validates :status, inclusion: { in: STATUSES }
+  validates :source, inclusion: { in: SOURCES }
 
   after_create_commit  -> { broadcast_prepend_to "board", target: "fr-column-#{status}", partial: "feature_requests/card", locals: { feature_request: self } }
   after_update_commit  :broadcast_card_refresh
-  after_update_commit  :enqueue_address_feedback_job, if: -> { saved_change_to_status? && status == "review_feedback" }
   after_destroy_commit -> { broadcast_remove_to "board" }
 
   scope :todo,             -> { where(status: "todo") }
   scope :doing,            -> { where(status: "doing") }
-  scope :to_review,        -> { where(status: "to_review") }
   scope :reviewing,        -> { where(status: "reviewing") }
-  scope :review_feedback,  -> { where(status: "review_feedback") }
+  scope :addressing_feedback, -> { where(status: "addressing_feedback") }
+  scope :landing,          -> { where(status: "landing") }
+  scope :done,             -> { where(status: "done") }
+  scope :stopped,          -> { where(status: "stopped") }
   scope :failed,           -> { where(status: "failed") }
+
+  def active?
+    %w[todo doing reviewing addressing_feedback landing].include?(status)
+  end
+
+  def stop_requested?
+    stop_requested_at.present?
+  end
 
   def slug
     title.parameterize.presence || "untitled"
@@ -33,10 +44,6 @@ class FeatureRequest < ApplicationRecord
 
   def enqueue_dark_factory_job
     DarkFactoryJob.perform_later(id)
-  end
-
-  def enqueue_address_feedback_job
-    AddressFeedbackJob.perform_later(id)
   end
 
   def broadcast_card_refresh

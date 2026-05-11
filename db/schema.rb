@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_085346) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_11_123100) do
   create_table "agent_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "feature_request_id", null: false
@@ -22,16 +22,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_085346) do
     t.index ["feature_request_id"], name: "index_agent_events_on_feature_request_id"
   end
 
+  create_table "factory_settings", force: :cascade do |t|
+    t.datetime "automatic_started_at"
+    t.datetime "created_at", null: false
+    t.string "mode", default: "manual", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feature_requests", force: :cascade do |t|
     t.text "body", null: false
     t.string "branch_name"
     t.datetime "created_at", null: false
     t.text "failure_reason"
     t.boolean "feedback_addressed", default: false, null: false
+    t.string "landed_commit_sha"
     t.datetime "last_review_seen_at"
-    t.datetime "pr_merged_at"
-    t.string "pr_url"
+    t.text "review_body"
+    t.string "review_verdict"
+    t.string "source", default: "manual", null: false
     t.string "status", default: "todo", null: false
+    t.datetime "stop_requested_at"
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["status"], name: "index_feature_requests_on_status"

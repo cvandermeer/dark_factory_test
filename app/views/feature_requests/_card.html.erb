@@ -1,38 +1,39 @@
 <%= tag.div id: dom_id(feature_request), class: "fr-card fr-card--#{feature_request.status}" do %>
   <%= link_to feature_request, class: "fr-card__link" do %>
     <div class="fr-card__title"><%= feature_request.title %></div>
+    <% if feature_request.source == "automatic" %>
+      <div class="fr-card__source">automatic</div>
+    <% end %>
     <div class="fr-card__body"><%= truncate(feature_request.body, length: 120) %></div>
 
     <% case feature_request.status %>
     <% when "doing" %>
       <div class="fr-card__status">
-        <span class="fr-spinner"></span> running…
+        <span class="fr-spinner"></span> implementing...
       </div>
     <% when "reviewing" %>
       <div class="fr-card__status">
-        <span class="fr-spinner fr-spinner--reviewing"></span> reviewing…
-        <% if feature_request.pr_url.present? %>
-          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
+        <span class="fr-spinner fr-spinner--reviewing"></span> reviewing...
+      </div>
+    <% when "addressing_feedback" %>
+      <div class="fr-card__status">
+        <span class="fr-spinner fr-spinner--addressing"></span> addressing feedback...
+      </div>
+    <% when "landing" %>
+      <div class="fr-card__status">
+        <span class="fr-spinner fr-spinner--landing"></span> landing on main...
+      </div>
+    <% when "done" %>
+      <div class="fr-card__status">
+        <% if feature_request.landed_commit_sha.present? %>
+          landed <code><%= feature_request.landed_commit_sha.first(7) %></code>
+        <% else %>
+          done
         <% end %>
       </div>
-    <% when "to_review" %>
+    <% when "stopped" %>
       <div class="fr-card__status">
-        <% if feature_request.pr_url.present? %>
-          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
-        <% end %>
-        <% if feature_request.pr_merged_at.present? %>
-          <span class="fr-merged">✓ merged</span>
-        <% end %>
-        <% if feature_request.feedback_addressed %>
-          <span class="fr-feedback-addressed">↻ feedback addressed</span>
-        <% end %>
-      </div>
-    <% when "review_feedback" %>
-      <div class="fr-card__status">
-        <% if feature_request.pr_url.present? %>
-          <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">PR ↗</a>
-        <% end %>
-        <span>review feedback received</span>
+        stopped
       </div>
     <% when "failed" %>
       <div class="fr-card__status fr-card__status--failed">
@@ -41,9 +42,15 @@
     <% end %>
   <% end %>
 
-  <% if %w[to_review failed].include?(feature_request.status) %>
+  <% if feature_request.active? %>
+    <%= button_to "Stop", stop_feature_request_path(feature_request), method: :post,
+                  data: { turbo_confirm: "Stop this iteration loop?" },
+                  class: "fr-card__stop" %>
+  <% end %>
+
+  <% if %w[done stopped failed].include?(feature_request.status) %>
     <%= button_to "Delete", feature_request, method: :delete,
-                  data: { turbo_confirm: "Remove this card? (Does not touch GitHub.)" },
+                  data: { turbo_confirm: "Remove this card? (Does not touch git history.)" },
                   class: "fr-card__delete" %>
   <% end %>
 <% end %>

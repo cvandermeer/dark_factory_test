@@ -1,0 +1,20 @@
+<% content_for :title, "Project Vision - Dark Factory" %>
+
+<div class="vision-page">
+  <nav class="info-nav">
+    <%= link_to "← Back to board", root_path %>
+  </nav>
+
+  <h1 class="info-title">Project Vision</h1>
+  <p class="info-subtitle">
+    Automatic mode uses this as the base instruction for the idea agent.
+  </p>
+
+  <%= form_with url: project_vision_path, method: :patch, scope: :project_vision, class: "vision-form" do |f| %>
+    <%= f.text_area :body, value: @vision, rows: 22, class: "vision-form__textarea" %>
+    <div class="vision-form__actions">
+      <%= f.submit "Save vision", class: "vision-form__submit" %>
+      <%= link_to "Cancel", root_path, class: "vision-form__cancel" %>
+    </div>
+  <% end %>
+</div>

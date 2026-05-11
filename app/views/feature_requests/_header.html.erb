@@ -1,11 +1,21 @@
 <header>
   <h1><%= feature_request.title %></h1>
   <div class="fr-show__status">Status: <strong><%= feature_request.status %></strong></div>
-  <% if feature_request.pr_url.present? %>
-    <a href="<%= feature_request.pr_url %>" target="_blank" rel="noopener">Open PR ↗</a>
-    <% if feature_request.pr_merged_at.present? %>
-      <span class="fr-merged">✓ merged <%= time_ago_in_words(feature_request.pr_merged_at) %> ago</span>
-    <% end %>
+  <% if feature_request.active? %>
+    <%= button_to "Stop iteration", stop_feature_request_path(feature_request), method: :post,
+                  data: { turbo_confirm: "Stop this iteration loop?" },
+                  class: "fr-show__stop" %>
+  <% end %>
+  <% if feature_request.landed_commit_sha.present? %>
+    <div class="fr-show__commit">Landed commit: <code><%= feature_request.landed_commit_sha %></code></div>
+  <% end %>
+  <% if feature_request.review_verdict.present? %>
+    <div class="fr-show__review">
+      <strong>Review:</strong> <%= feature_request.review_verdict.humanize %>
+      <% if feature_request.review_body.present? %>
+        <pre><%= feature_request.review_body %></pre>
+      <% end %>
+    </div>
   <% end %>
   <% if feature_request.failure_reason.present? %>
     <div class="fr-show__failure">

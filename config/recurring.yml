@@ -10,14 +10,7 @@
 #     schedule: at 5am every day
 
 default: &default
-  poll_merged_prs:
-    class: PollMergedPrsJob
-    queue: default
-    schedule: every 2 minutes
-  poll_pr_reviews:
-    class: PollPrReviewsJob
-    queue: default
-    schedule: every 2 minutes
+  {}
 
 development:
   <<: *default
